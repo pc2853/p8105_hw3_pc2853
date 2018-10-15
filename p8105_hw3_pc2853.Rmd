@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 )
 
 theme_set(theme_bw() + theme(legend.position = "bottom"))
+devtools::install_github("thomasp85/patchwork")
 library(patchwork)
 
 ```
@@ -52,13 +53,16 @@ Looking at the summarized result about the number of location in each states, th
 
 ```{r}
 brfss_smart2010 %>% 
-  group_by(locationabbr, year) %>% 
+  group_by(year, locationabbr) %>% 
   summarize(n_locations = n_distinct(locationdesc)) %>% 
-  ggplot(aes(x = year, y = n_locations), color = locationabbr) + geom_line() +
-  viridis::scale_color_viridis(
-    name = "location", 
-    discrete = TRUE
-  )
+  ggplot(aes(x = year, y = n_locations, color = locationabbr)) +
+    geom_line() +
+    labs(
+      title = "Number of locations in every states",
+      x = "Year",
+      y = "Number of locations",
+      color = 'States'
+    )  
 ```
 
 
