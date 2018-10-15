@@ -99,8 +99,40 @@ data(instacart)
 
 ```{r data cleaning}
 instacart = 
-  instacart 
+  instacart %>% 
+  janitor::clean_names()
   
 ```
+The data instacart imported from online is a dataset with dimension `r dim(instacart)`. It recorded every users imformation with various aspects for example the number of orders and the product number, ordered by each order id of individual users. 
+####How many aisles are there, and which aisles are the most items ordered from?
+```{r}
+instacart %>% 
+  group_by(aisle) %>% 
+  select(aisle_id, order_id) %>%
+  summarize(n_orders = n()) %>% 
+  arrange(desc(n_orders)) %>% head(1) 
+ 
+  
+```
+In total there are `r nrow(distince(instacart, aisle_id))` aisles, where fresh vegetables are the most items ordered from. 
+
+####Make a plot that shows the number of items ordered in each aisle. Order aisles sensibly, and organize your plot so others can read it.
+
+```{r}
+instacart %>% 
+  group_by(aisle) %>% 
+  summarize(n_items = n()) %>% 
+  mutate(aisle =  forcats::fct_reorder(aisle, desc(n_items))) %>%
+  ggplot(aes(x = aisle, y = n_items)) + geom_point() +
+  scale_y_continuous(breaks = c(0, 1000, 10000, 100000, 200000), limits = c(0, 200000), labels = c("0", "1000","10000","100000","200000")) +
+  labs(
+    title = "the number of items ordered in each aisle", 
+       x = "aisles",
+       y = "number of items") 
+       
+```
+
+
+
 
 
