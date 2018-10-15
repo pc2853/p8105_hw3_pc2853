@@ -10,11 +10,6 @@ library(tidyverse)
 options(tibble.print_min = 5)
 
 library(ggridges)
-knitr::opts_chunk$set(
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%"
-)
 
 theme_set(theme_bw() + theme(legend.position = "bottom"))
 devtools::install_github("thomasp85/patchwork")
@@ -22,7 +17,7 @@ library(patchwork)
 
 ```
 
-------
+
 #Problem 1
 ```{r}
 devtools::install_github("p8105/p8105.datasets")
@@ -76,6 +71,8 @@ brfss_smart2010 %>%
   knitr::kable(digits = 1)
   
 ```
+
+
 I made a table containing the mean and standard deviaion of the proportion of excellent response of NY state in 2002, 2006, 2010 by using the data_value. 
 
 ####For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.
@@ -114,7 +111,9 @@ instacart %>%
  
   
 ```
-In total there are `r nrow(distince(instacart, aisle_id))` aisles, where fresh vegetables are the most items ordered from. 
+
+
+In total there are `r nrow(distinct(instacart, aisle_id))` aisles, where fresh vegetables are the most items ordered from. 
 
 ####Make a plot that shows the number of items ordered in each aisle. Order aisles sensibly, and organize your plot so others can read it.
 
@@ -132,6 +131,8 @@ instacart %>%
   theme(axis.text.x = element_text(angle = 90, size = rel(0.5), hjust = 1)) 
        
 ```
+
+
 ####Make a table showing the most popular item in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”.
 ```{r}
 instacart %>% 
@@ -143,6 +144,8 @@ instacart %>%
   knitr::kable()
   
 ```
+
+
 THe most popular products are light brown sugar in baking ingredients, the organic baby spinach in packaged vegetables fruits, and the organix grain free chicken&vegetable in dog food care. 
 
 #### Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
@@ -161,17 +164,37 @@ I created a 2x7 table using spread command to summarized the mean hours of a day
 
 #Problem3
 
-```{r setup}
+```{r p3setup}
 data("ny_noaa")
 ```
-```{r data cleaning}
+```{r p3data cleaning}
 ny_noaa = 
   ny_noaa %>% 
   janitor::clean_names() 
 
 ```
-This data set has a dimension of 
+This data set has a dimension of `r dim(ny_noaa)`and a structure which is `r str(ny_noaa)`. It is a dataset containing information about the weathers in NY which are collected by different weather station identified with id each in the data. The date of recording, the number of occurance of snowing, precipitation, the depth of snowing, and the range of temperature are also included. 
+Within the dataset, there are a significant extent of missing data. 
 
+```{r}
+na_tmin = 
+  ny_noaa %>% 
+  filter(is.na(tmin)) %>% 
+  count()
+```
+
+For example, The percentage of missing data in minimum temperature is `r na_tmin/nrow(ny_noaa)`. which is almost the half of the aquired data, that will definitely decrease the sample size of the statistically significant data. 
+
+####Do some data cleaning. Create separate variables for year, month, and day. Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?
+```{r}
+ny_noaa_clean = 
+  
+  ny_noaa %>% 
+  separate(date, into = c("year", "month","day"), sep = "-") %>% 
+  mutate(tmin = as.numeric(tmin), tmax = as.numeric(tmax), prcp = as.numeric(prcp)) %>% 
+  mutate(tmin = tmin / 10, tmax = tmax / 10, prcp = prcp / 10 )
+
+```
 
 
 
