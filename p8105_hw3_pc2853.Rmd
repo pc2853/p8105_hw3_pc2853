@@ -196,6 +196,68 @@ ny_noaa_clean =
 
 ```
 
+I divided the max and min temperature, and precipitation value by 10 since they are tenths of celcius, and tenths of mm in the original data. 
+
+
+```{r}
+  ny_noaa_clean %>% 
+  group_by(snow) %>% 
+  count(snow) %>% 
+  arrange(desc(n)) %>% 
+  head(1)
+
+```
+
+
+
+The most commonly observed value in snow is 0. This simply implys that the weather in most days, that are actually recorded by a weather station, did not snow at all. The occurance of snowing is low. 
+
+
+####Make a two-panel plot showing the average max temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
+
+```{r}
+ny_noaa_clean %>% 
+  filter(month == c("01","07")) %>% 
+  group_by(year, month, id) %>% 
+  summarize(mean_tmax = mean(tmax, na.rm = TRUE)) %>% 
+  ggplot(aes(x = year, y = mean_tmax)) + geom_boxplot() + 
+  facet_grid(~month) +
+  theme(axis.text.x = element_text(angle = 90, size = rel(1), hjust = 1))  +
+  labs(title = "The average max temperature in Janurary and July in each station across years", x = "years", y = "average max temp")
+```
+
+
+In order to observe outlier, boxplot would be the best option for the plot structure here. There are many outliers in each year shown as black dots in the plot. 
+
+
+#### Make a two-panel plot showing (i) tmax vs tmin for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+
+
+```{r}
+plot1 = 
+  ny_noaa_clean %>% 
+  ggplot((aes(x = tmin, y = tmax))) + geom_hex() +
+  labs(title = "Max vs Min temperature", x = "Min temperature", y = "Max temperature")
+
+plot2 = 
+  ny_noaa_clean %>% 
+  filter(snow > 0, snow < 100) %>%
+  ggplot(aes(x = year, y = snow)) + geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 90, size = rel(1), hjust = 1)) +
+  labs(title = "Distribution of snowfall from 0 to 100")
+
+plot1 + plot2
+
+
+```
+
+
+
+Since the sample size is very big in our example, hexplot will be handy in dealing with plot with a lots of data, thus we used "geom_hex()" here for the first graph. I did not alter the color of the first plot according to the station id because the data is too large and it might take a long time for my computer to progress it. For the Second graph, since the data is big, choosing geom_line or geom_point will simply get a graph filled with points and lines, without any observable information. In this case I chose boxplot to better observe the distribution of the data and its outlier. 
+
+
+
+
 
 
 
