@@ -128,7 +128,8 @@ instacart %>%
   labs(
     title = "the number of items ordered in each aisle", 
        x = "aisles",
-       y = "number of items") 
+       y = "number of items") +
+  theme(axis.text.x = element_text(angle = 90, size = rel(0.5), hjust = 1)) 
        
 ```
 
