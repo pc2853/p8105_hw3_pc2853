@@ -55,14 +55,52 @@ Looking at the summarized result about the number of location in each states, th
 brfss_smart2010 %>% 
   group_by(year, locationabbr) %>% 
   summarize(n_locations = n_distinct(locationdesc)) %>% 
-  ggplot(aes(x = year, y = n_locations, color = locationabbr)) +
-    geom_line() +
-    labs(
-      title = "Number of locations in every states",
-      x = "Year",
-      y = "Number of locations",
-      color = 'States'
+  ggplot(aes(x = year, y = n_locations, color = locationabbr)) + geom_line() +
+  labs(
+    title = "Number of locations in every states",
+    x = "Year",
+    y = "Number of locations",
+    color = 'States'
     )  
+```
+
+I make a spaghetti plot using geom_line with defferent color within different states, which summarizing the number of locations in each states.
+
+####Make a table showing, for the years 2002, 2006, and 2010, the mean and standard deviation of the proportion of “Excellent” responses across locations in NY State.
+
+```{r}
+brfss_smart2010 %>% 
+  filter(year == c(2006, 2002, 2010), locationabbr == "NY", response == "Excellent") %>% 
+  group_by(year) %>% 
+  summarize(NYmean = mean(data_value, na.rm = TRUE), NYsd = sd(data_value, na.rm = TRUE)) %>% 
+  knitr::kable(digits = 1)
+  
+```
+I made a table containing the mean and standard deviaion of the proportion of excellent response of NY state in 2002, 2006, 2010 by using the data_value. 
+
+####For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.
+
+```{r}
+brfss_smart2010 %>% 
+  group_by(locationabbr,year,response) %>% 
+  summarize(mean_proportion = mean(data_value)) %>% 
+  ggplot(aes(x = year, y = mean_proportion, color = locationabbr)) + facet_grid(~ response) + geom_line() +
+  labs(
+    title = "The Distribution of state-level averages over time", 
+    x = "Year",
+    y = "Averages"
+  )
+```
+
+#Problem2
+```{r p2setup}
+data(instacart)
+```
+
+```{r data cleaning}
+instacart = 
+  instacart 
+  
 ```
 
 
