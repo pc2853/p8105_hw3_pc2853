@@ -1,0 +1,49 @@
+---
+title: "p8105_hw3_pc2853"
+author: "pc2853"
+date: "October 15, 2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+options(tibble.print_min = 5)
+
+library(ggridges)
+```
+
+------
+#Problem 1
+```{r}
+devtools::install_github("p8105/p8105.datasets")
+library(p8105.datasets)
+data(brfss_smart2010)
+```
+```{r}
+brfss_smart2010 =
+  brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter(topic == "Overall Health") %>% 
+  filter(response == c("Excellent", "Very good", "Good", "Fair", "Poor")) %>% 
+  janitor::clean_names()  %>% 
+  mutate(response = forcats::fct_relevel(response, c("Excellent", "Very good", "Good", "Fair", "Poor")))
+```
+#### In 2002, which states were observed at 7 locations?
+
+
+```{r}
+brfss_smart2010 %>% 
+  group_by(locationabbr) %>% 
+  summarize(n_locations = n_distinct(locationdesc))
+```
+
+Looking at the summarized result about the number of location in each states, the states that have 7 locations are CT, MT, NH, OR, UT.
+
+####Make a “spaghetti plot” that shows the number of locations in each state from 2002 to 2010.
+
+```{r}
+
+```
+
+
